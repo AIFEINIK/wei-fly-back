@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wei.fly.dao.OrderMgrMapper">
+
+    <sql id="listConditionSql">
+        <if test="userId != null"> AND o.user_id = #{userId} </if>
+        <if test="orderCode != null"> AND o.order_code = #{orderCode} </if>
+        <if test="cardCode != null"> AND o.card_code = #{cardCode} </if>
+        <if test="seatId != null"> AND o.seat_id = #{seatId} </if>
+        <if test="startTime != null and endTime != null"> and o.create_time between #{startTime} and #{endTime} </if>
+    </sql>
+
+    <sql id="conditionSql">
+        <if test="userId != null"> AND o.user_id = #{userId} </if>
+        <if test="orderCode != null"> AND o.order_code = #{orderCode} </if>
+        <if test="cardCode != null"> AND o.card_code = #{cardCode} </if>
+        <if test="seatId != null"> AND o.seat_id = #{seatId} </if>
+    </sql>
+
+    <sql id="all_column">
+        o.create_time,
+        o.order_code,
+        o.card_code,
+        o.use_time,
+        o.user_id,
+        o.seat_id
+    </sql>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO f_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime != null"> create_time, </if>
+            <if test="orderCode != null"> order_code, </if>
+            <if test="cardCode != null"> card_code, </if>
+            <if test="useTime != null"> use_time, </if>
+            <if test="userId != null"> user_id, </if>
+            <if test="seatId != null"> seat_id, </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime != null"> #{createTime}, </if>
+            <if test="orderCode != null"> #{orderCode}, </if>
+            <if test="cardCode != null"> #{cardCode}, </if>
+            <if test="useTime != null"> #{useTime}, </if>
+            <if test="userId != null"> #{userId}, </if>
+            <if test="seatId != null"> #{seatId}, </if>
+        </trim>
+    </insert>
+
+    <select id="countOrder" resultType="int" parameterType="ListOrderRequest">
+        select count(*) from f_order o
+        <where>
+            <include refid="listConditionSql"/>
+        </where>
+    </select>
+
+    <select id="listOrder" parameterType="ListOrderRequest" resultType="Order">
+        select <include refid="all_column"/> from f_order o
+        <where>
+            <include refid="listConditionSql"/>
+        </where>
+        order by o.create_time desc
+        limit #{pageFrom}, #{pageSize}
+    </select>
+
+    <!--auto generated Code-->
+    <select id="selectById" resultType="Order">
+        SELECT <include refid="all_column"/>
+        FROM f_order o where o.order_code = #{orderCode}
+    </select>
+
+    <select id="isOrderExists" resultType="Order">
+        SELECT <include refid="all_column"/>, s.num as seatNum
+        FROM f_order o
+        LEFT  join f_seat s on o.seat_id = s.id
+        WHERE o.user_id = #{userId} and (o.use_time between #{beginTime} and #{endTime})
+    </select>
+
+    <select id="selectByCondition" resultType="Order">
+        SELECT <include refid="all_column"/>
+        FROM f_order o
+        <where>
+            <include refid="conditionSql"/>
+        </where>
+        limit 500
+    </select>
+
+    <!--auto generated Code-->
+    <delete id="delete">
+        DELETE FROM f_order where order_code = #{orderCode}
+    </delete>
+
+</mapper>

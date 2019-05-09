@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wei.fly.dao.UserMapper">
+
+    <sql id="listConditionSql">
+        <if test="userId != null"> AND u.user_id = #{userId} </if>
+        <if test="userName != null"> AND u.user_name = #{userName} </if>
+        <if test="phone != null"> AND u.phone = #{phone} </if>
+        <if test="startTime != null and endTime != null"> and u.create_time between #{startTime} and #{endTime} </if>
+    </sql>
+
+    <sql id="conditionSql">
+        <if test="userId != null"> AND u.user_id = #{userId} </if>
+        <if test="userName != null"> AND u.user_name = #{userName} </if>
+        <if test="phone != null"> AND u.phone = #{phone} </if>
+    </sql>
+    
+    <sql id="all_column">
+        u.user_id,
+        u.user_name,
+        u.passwd,
+        u.sex,
+        u.phone,
+        u.open_id,
+        u.session_key,
+        u.create_time,
+        u.update_time,
+        u.user_status,
+        u.role_type
+    </sql>
+    
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO f_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null"> user_id, </if>
+            <if test="userName != null"> user_name, </if>
+            <if test="sex != null"> sex, </if>
+            <if test="passwd != null"> passwd, </if>
+            <if test="phone != null"> phone, </if>
+            <if test="openId != null"> open_id, </if>
+            <if test="sessionKey != null"> session_key, </if>
+            <if test="createTime != null"> create_time, </if>
+            <if test="updateTime != null"> update_time, </if>
+            <if test="userStatus != null"> user_status, </if>
+            <if test="roleType != null"> role_type, </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null"> #{userId}, </if>
+            <if test="userName != null"> #{userName}, </if>
+            <if test="sex != null"> #{sex}, </if>
+            <if test="passwd != null"> #{passwd}, </if>
+            <if test="phone != null"> #{phone}, </if>
+            <if test="openId != null"> #{openId}, </if>
+            <if test="sessionKey != null"> #{sessionKey}, </if>
+            <if test="createTime != null"> #{createTime}, </if>
+            <if test="updateTime != null"> #{updateTime}, </if>
+            <if test="userStatus != null"> #{userStatus}, </if>
+            <if test="roleType != null"> #{roleType}, </if>
+        </trim>
+    </insert>
+
+    <!--auto generated Code-->
+    <update id="update" keyProperty="id" useGeneratedKeys="true">
+        UPDATE f_user
+        <set>
+            <if test="userName != null"> user_name = #{userName}, </if>
+            <if test="sex != null"> sex = #{sex}, </if>
+            <if test="passwd != null"> sex = #{passwd}, </if>
+            <if test="phone != null"> phone = #{phone}, </if>
+            <if test="openId != null"> open_id = #{openId}, </if>
+            <if test="updateTime != null"> update_time = #{updateTime}, </if>
+            <if test="sessionKey != null"> session_key = #{sessionKey}, </if>
+            <if test="userStatus != null"> user_status = #{userStatus}, </if>
+            <if test="roleType != null"> role_type = #{roleType}, </if>
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
+    <select id="countUser" resultType="int" parameterType="ListUserRequest">
+        select count(*) from f_user u
+        <where>
+            <include refid="listConditionSql"/>
+        </where>
+    </select>
+
+    <select id="listUser" parameterType="ListUserRequest" resultType="User">
+        select <include refid="all_column"/> from f_user u
+        <where>
+            <include refid="listConditionSql"/>
+        </where>
+        order by u.create_time desc
+        limit #{pageFrom}, #{pageSize}
+    </select>
+
+    <!--auto generated Code-->
+    <select id="selectByUserId" resultType="User">
+        SELECT <include refid="all_column"/>
+        FROM f_user u where u.user_id = #{userId}
+    </select>
+
+    <select id="selectByOpenId" resultType="User">
+        SELECT <include refid="all_column"/>
+        FROM f_user u
+        where u.open_id = #{openId}
+    </select>
+
+    <select id="selectByCondition" resultType="User">
+        SELECT <include refid="all_column"/>
+        FROM f_user u
+        <where>
+            <include refid="conditionSql"/>
+        </where>
+        limit 500
+    </select>
+
+    <!--auto generated Code-->
+    <delete id="delete">
+        DELETE FROM f_user where user_id = #{userId}
+    </delete>
+
+</mapper>

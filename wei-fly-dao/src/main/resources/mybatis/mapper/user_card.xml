@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wei.fly.dao.UserCardMapper">
+    
+    <sql id="all_column">
+        id,
+        create_time,
+        update_time,
+        user_id,
+        card_code,
+        can_use_time,
+        active
+    </sql>
+    
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO f_user_card
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null"> user_id, </if>
+            <if test="createTime != null"> create_time, </if>
+            <if test="updateTime != null"> update_time, </if>
+            <if test="cardCode != null"> card_code, </if>
+            <if test="canUseTime != null"> can_use_time, </if>
+            <if test="active != null"> active, </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null"> #{userId}, </if>
+            <if test="createTime != null"> #{createTime}, </if>
+            <if test="updateTime != null"> #{updateTime}, </if>
+            <if test="cardCode != null"> #{cardCode}, </if>
+            <if test="canUseTime != null"> #{canUseTime}, </if>
+            <if test="active != null"> #{active}, </if>
+        </trim>
+    </insert>
+
+    <!--auto generated Code-->
+    <update id="update" keyProperty="id" useGeneratedKeys="true">
+        UPDATE f_user_card
+        <set>
+            <if test="updateTime != null"> update_time = #{updateTime}, </if>
+            <if test="canUseTime != null"> can_use_time = #{canUseTime}, </if>
+            <if test="active != null"> active = #{active}, </if>
+        </set>
+        WHERE user_id = #{userId} and card_code = #{cardCode}
+    </update>
+
+    <select id="selectByUserId" resultType="UserCard">
+        SELECT <include refid="all_column"/>
+        FROM f_user_card
+        WHERE user_id = #{userId}
+    </select>
+
+</mapper>

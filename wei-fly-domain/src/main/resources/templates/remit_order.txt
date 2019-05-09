@@ -1,0 +1,7 @@
+hi：audy
+
+客户编码为${userId}，广告主编号为${advertiserCode}，通过${remitType}方式打款${remitAmount}，请尽快确认，附件为 打款凭证。
+
+
+谢谢！
+${fromUserName}

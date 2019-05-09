@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wei.fly.dao.RecordMapper">
+
+    <sql id="conditionSql">
+        <if test="userId != null"> AND user_id = #{userId} </if>
+    </sql>
+
+    <sql id="all_column">
+        user_id,
+        card_code,
+        create_time,
+        consume_num,
+        seat_num,
+        seat_type,
+        order_code
+    </sql>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO f_consume_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null"> user_id, </if>
+            <if test="cardCode != null"> card_code, </if>
+            <if test="createTime != null"> create_time, </if>
+            <if test="consumeNum != null"> consume_num, </if>
+            <if test="seatNum != null"> seat_num, </if>
+            <if test="seatType != null"> seat_type, </if>
+            <if test="orderCode != null"> order_code, </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null"> #{userId}, </if>
+            <if test="cardCode != null"> #{cardCode}, </if>
+            <if test="createTime != null"> #{createTime}, </if>
+            <if test="consumeNum != null"> #{consumeNum}, </if>
+            <if test="seatNum != null"> #{seatNum}, </if>
+            <if test="seatType != null"> #{seatType}, </if>
+            <if test="orderCode != null"> #{orderCode}, </if>
+        </trim>
+    </insert>
+
+    <select id="countRecord" resultType="int" parameterType="ListRecordRequest">
+        select count(*) from f_consume_record
+        <where>
+            <include refid="conditionSql"/>
+        </where>
+    </select>
+
+    <select id="listRecord" parameterType="ListRecordRequest" resultType="Record">
+        select <include refid="all_column"/> from f_consume_record
+        <where>
+            <include refid="conditionSql"/>
+        </where>
+        order by create_time desc
+        limit #{pageFrom}, #{pageSize}
+    </select>
+
+</mapper>

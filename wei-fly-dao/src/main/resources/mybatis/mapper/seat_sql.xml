@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wei.fly.dao.SeatMapper">
+
+    <sql id="listConditionSql">
+        <if test="seatType != null"> and seat_type = #{seatType.index}</if>
+        <if test="locked != null"> and locked = #{locked.index}</if>
+        <if test="startTime != null and endTime != null"> and create_time between #{startTime} and #{endTime} </if>
+    </sql>
+
+    <sql id="conditionSql">
+        <if test="id != null"> AND id = #{id} </if>
+    </sql>
+
+    <sql id="all_column">
+        id,
+        create_time,
+        update_time,
+        num,
+        title,
+        locked,
+        seat_type,
+        locked_end_time
+    </sql>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO f_seat
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime != null"> create_time, </if>
+            <if test="updateTime != null"> update_time, </if>
+            <if test="num != null"> num, </if>
+            <if test="title != null"> title, </if>
+            <if test="locked != null"> locked, </if>
+            <if test="seatType != null"> seat_type, </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime != null"> #{createTime}, </if>
+            <if test="updateTime != null"> #{updateTime}, </if>
+            <if test="num != null"> #{num}, </if>
+            <if test="title != null"> #{title}, </if>
+            <if test="locked != null"> #{locked}, </if>
+            <if test="seatType != null"> #{seatType}, </if>
+        </trim>
+    </insert>
+
+    <update id="update" keyProperty="id" useGeneratedKeys="true">
+        UPDATE f_seat
+        <set>
+            <if test="num != null"> num = #{num}, </if>
+            <if test="title != null"> title = #{title}, </if>
+            <if test="locked != null"> locked = #{locked}, </if>
+            <if test="seatType != null"> seat_type = #{seatType}, </if>
+            <if test="lockedEndTime != null"> locked_end_time = #{lockedEndTime}, </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="countSeat" resultType="int" parameterType="ListSeatRequest">
+        select count(*) from f_seat
+        <where>
+            <include refid="listConditionSql"/>
+        </where>
+    </select>
+
+    <select id="listSeat" parameterType="ListSeatRequest" resultType="Seat">
+        select <include refid="all_column"/> from f_seat
+        <where>
+            <include refid="listConditionSql"/>
+        </where>
+        order by num
+        limit #{pageFrom}, #{pageSize}
+    </select>
+
+    <!--auto generated Code-->
+    <select id="selectById" resultType="Seat">
+        SELECT <include refid="all_column"/>
+        FROM f_seat where id = #{id}
+    </select>
+
+    <select id="selectByCondition" resultType="Seat">
+        SELECT <include refid="all_column"/>
+        FROM f_seat
+        <where>
+            <include refid="conditionSql"/>
+        </where>
+        limit 500
+    </select>
+
+    <!--auto generated Code-->
+    <delete id="delete">
+        DELETE FROM f_seat where id = #{id}
+    </delete>
+
+</mapper>

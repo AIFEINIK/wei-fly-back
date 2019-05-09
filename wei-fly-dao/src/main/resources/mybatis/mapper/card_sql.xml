@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wei.fly.dao.CardMapper">
+
+    <sql id="listConditionSql">
+        <if test="cardCode != null"> AND card_code = #{cardCode} </if>
+        <if test="cardType != null"> AND card_type = #{cardType.index} </if>
+        <if test="userId != null"> AND user_id = #{userId} </if>
+        <if test="startTime != null and endTime != null"> and create_time between #{startTime} and #{endTime} </if>
+    </sql>
+
+    <sql id="conditionSql">
+        <if test="cardCode != null"> AND card_code = #{cardCode} </if>
+        <if test="userId != null"> AND user_id = #{userId} </if>
+    </sql>
+
+    <sql id="all_column">
+        user_id,
+        card_name,
+        card_code,
+        create_time,
+        update_time,
+        card_type,
+        can_use_num,
+        active
+    </sql>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO f_card
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null"> user_id, </if>
+            <if test="cardName != null"> card_name, </if>
+            <if test="cardCode != null"> card_code, </if>
+            <if test="createTime != null"> create_time, </if>
+            <if test="updateTime != null"> update_time, </if>
+            <if test="cardType != null"> card_type, </if>
+            <if test="canUseNum != null"> can_use_num, </if>
+            <if test="active != null"> active, </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null"> #{userId}, </if>
+            <if test="cardName != null"> #{cardName}, </if>
+            <if test="cardCode != null"> #{cardCode}, </if>
+            <if test="createTime != null"> #{createTime}, </if>
+            <if test="updateTime != null"> #{updateTime}, </if>
+            <if test="cardType != null"> #{cardType}, </if>
+            <if test="canUseNum != null"> #{canUseNum}, </if>
+            <if test="active != null"> #{active}, </if>
+        </trim>
+    </insert>
+
+    <update id="update" keyProperty="id" useGeneratedKeys="true">
+        UPDATE f_card
+        <set>
+            <if test="userId != null"> user_id = #{userId}, </if>
+            <if test="cardName != null"> card_name = #{cardName}, </if>
+            <if test="cardCode != null"> card_code = #{cardCode}, </if>
+            <if test="createTime != null"> create_time = #{createTime}, </if>
+            <if test="cardType != null"> card_type = #{cardType}, </if>
+            <if test="canUseNum != null"> can_use_num = #{canUseNum}, </if>
+            <if test="active != null"> active = #{active}, </if>
+        </set>
+        WHERE card_code = #{cardCode}
+    </update>
+
+    <select id="countCard" resultType="int" parameterType="ListSeatRequest">
+        select count(*) from f_card
+        <where>
+            <include refid="listConditionSql"/>
+        </where>
+    </select>
+
+    <select id="listCard" parameterType="ListCardRequest" resultType="Card">
+        select <include refid="all_column"/> from f_card
+        <where>
+            <include refid="listConditionSql"/>
+        </where>
+        order by create_time desc
+        limit #{pageFrom}, #{pageSize}
+    </select>
+
+    <!--auto generated Code-->
+    <select id="selectByUserId" resultType="Card">
+        SELECT <include refid="all_column"/>
+        FROM f_card where user_id = #{userId}
+    </select>
+
+    <!--auto generated Code-->
+    <delete id="deleteByCardCode">
+        DELETE FROM f_card where card_code = #{cardCode}
+    </delete>
+
+</mapper>

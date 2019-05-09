@@ -1,0 +1,23 @@
+server:
+  port: 10300
+#  ssl:
+#       key-store: classpath:feinik.jks
+#       key-store-password: 5ecm4mx1gsxt17b
+#       key-store-type: JKS
+spring:
+  application:
+    name: wei-fly-web
+    http:
+      encoding.charset: UTF-8
+      encoding.enable: true
+      encoding.force: true
+  profiles:
+    active: @spring.profiles.active@
+# LOGGING
+logging:
+  config: classpath:log4j2.xml
+
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: com.wei.fly
+  config-location: classpath:mybatis/mybatis_config.xml

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wei.fly.dao.UserRoleMapper">
+    
+    <sql id="all_column">
+        r.user_id,
+        r.role_id
+    </sql>
+    
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO f_user_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null"> user_id, </if>
+            <if test="roleId != null"> role_id, </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null"> #{userId}, </if>
+            <if test="roleId != null"> #{roleId}, </if>
+        </trim>
+    </insert>
+
+    <!--auto generated Code-->
+    <update id="update" keyProperty="id" useGeneratedKeys="true">
+        UPDATE f_user_role
+        <set>
+            <if test="roleId != null"> role_id = #{roleId}, </if>
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
+    <!--auto generated Code-->
+    <delete id="delete">
+        DELETE FROM f_user_role where user_id = #{userId}
+    </delete>
+
+</mapper>

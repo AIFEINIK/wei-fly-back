@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration status="off" monitorInterval="1800">
+    <properties>
+
+        <property name="LOG_PATH">./logs</property>
+        <property name="LOG_NAME">ac-account-web</property>
+    </properties>
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout
+                pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />
+        </Console>
+        <RollingRandomAccessFile name="running-log"
+            fileName="${LOG_PATH}/${LOG_NAME}.log" filePattern="${LOG_PATH}/${LOG_NAME}.%d{yyyy-MM-dd}.log">
+            <PatternLayout
+                pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"
+                    modulate="true" />
+            </Policies>
+        </RollingRandomAccessFile>
+    </appenders>
+    <loggers>
+        <root level="info">
+            <appender-ref ref="running-log" />
+            <appender-ref ref="Console" />
+        </root>
+    </loggers>
+</configuration>

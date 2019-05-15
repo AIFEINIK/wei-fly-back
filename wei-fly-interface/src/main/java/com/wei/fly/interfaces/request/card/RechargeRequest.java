@@ -1,21 +1,20 @@
 package com.wei.fly.interfaces.request.card;
 
 import com.wei.fly.interfaces.annotation.RequiredParam;
-import com.wei.fly.interfaces.enums.CardTypeEnum;
-import com.wei.fly.interfaces.request.BaseRequest;
 import lombok.Data;
 
 /**
  * @author Feinik
  * @Discription
- * @Data 2019/5/5
+ * @Data 2019/5/9
  * @Version 1.0.0
  */
 @Data
-public class UnbindCardRequest extends BaseRequest {
+public class RechargeRequest {
 
     @RequiredParam
     private String cardCode;
-
-    private String userId;
+    @RequiredParam
+    private Integer useTime;
 }
+

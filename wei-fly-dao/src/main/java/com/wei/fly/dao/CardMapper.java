@@ -26,4 +26,6 @@ public interface CardMapper {
     Card selectByUserId(@Param("userId") String userId);
 
     void deleteByCardCode(@Param("cardCode") String cardCode);
+
+    Card selectByCardCode(String cardCode);
 }

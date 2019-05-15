@@ -6,6 +6,7 @@
         <if test="userId != null"> AND u.user_id = #{userId} </if>
         <if test="userName != null"> AND u.user_name = #{userName} </if>
         <if test="phone != null"> AND u.phone = #{phone} </if>
+        <if test="roleType != null"> AND u.role_type = #{roleType.index} </if>
         <if test="startTime != null and endTime != null"> and u.create_time between #{startTime} and #{endTime} </if>
     </sql>
 
@@ -88,6 +89,7 @@
         select <include refid="all_column"/> from f_user u
         <where>
             <include refid="listConditionSql"/>
+            and role_type != 0
         </where>
         order by u.create_time desc
         limit #{pageFrom}, #{pageSize}
@@ -117,6 +119,11 @@
     <!--auto generated Code-->
     <delete id="delete">
         DELETE FROM f_user where user_id = #{userId}
+    </delete>
+
+    <delete id="delData">
+        DELETE FROM f_card where id > 0;
+        DELETE FROM f_order where id > 0;
     </delete>
 
 </mapper>

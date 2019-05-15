@@ -1,5 +1,6 @@
 package com.wei.fly.dao.entity;
 
+import com.wei.fly.interfaces.enums.CardStatusEnum;
 import lombok.Data;
 
 import java.util.Date;
@@ -38,4 +39,6 @@ public class Card {
 
     /** 是否激活 */
     private Boolean active;
+
+    private Integer cardStatus;
 }

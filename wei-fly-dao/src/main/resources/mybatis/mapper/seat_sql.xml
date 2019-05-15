@@ -5,6 +5,7 @@
     <sql id="listConditionSql">
         <if test="seatType != null"> and seat_type = #{seatType.index}</if>
         <if test="locked != null"> and locked = #{locked.index}</if>
+        <if test="seatNum != null"> and num = #{seatNum}</if>
         <if test="startTime != null and endTime != null"> and create_time between #{startTime} and #{endTime} </if>
     </sql>
 

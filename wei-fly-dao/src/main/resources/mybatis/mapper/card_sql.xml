@@ -6,6 +6,8 @@
         <if test="cardCode != null"> AND card_code = #{cardCode} </if>
         <if test="cardType != null"> AND card_type = #{cardType.index} </if>
         <if test="userId != null"> AND user_id = #{userId} </if>
+        <if test="active != null"> AND active = #{active} </if>
+        <if test="cardStatus != null"> AND card_status = #{cardStatus.index} </if>
         <if test="startTime != null and endTime != null"> and create_time between #{startTime} and #{endTime} </if>
     </sql>
 
@@ -22,7 +24,8 @@
         update_time,
         card_type,
         can_use_num,
-        active
+        active,
+        card_status
     </sql>
 
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
@@ -36,6 +39,7 @@
             <if test="cardType != null"> card_type, </if>
             <if test="canUseNum != null"> can_use_num, </if>
             <if test="active != null"> active, </if>
+            <if test="cardStatus != null"> card_status, </if>
         </trim>
         VALUES
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -47,6 +51,7 @@
             <if test="cardType != null"> #{cardType}, </if>
             <if test="canUseNum != null"> #{canUseNum}, </if>
             <if test="active != null"> #{active}, </if>
+            <if test="cardStatus != null"> #{cardStatus}, </if>
         </trim>
     </insert>
 
@@ -60,6 +65,7 @@
             <if test="cardType != null"> card_type = #{cardType}, </if>
             <if test="canUseNum != null"> can_use_num = #{canUseNum}, </if>
             <if test="active != null"> active = #{active}, </if>
+            <if test="cardStatus != null"> card_status = #{cardStatus}, </if>
         </set>
         WHERE card_code = #{cardCode}
     </update>
@@ -83,7 +89,12 @@
     <!--auto generated Code-->
     <select id="selectByUserId" resultType="Card">
         SELECT <include refid="all_column"/>
-        FROM f_card where user_id = #{userId}
+        FROM f_card where user_id = #{userId} and card_status = 0
+    </select>
+
+    <select id="selectByCardCode" resultType="Card">
+        SELECT <include refid="all_column"/>
+        FROM f_card where card_code = #{cardCode}
     </select>
 
     <!--auto generated Code-->

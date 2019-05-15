@@ -1,5 +1,6 @@
 package com.wei.fly.interfaces.request.card;
 
+import com.wei.fly.interfaces.enums.CardStatusEnum;
 import com.wei.fly.interfaces.enums.CardTypeEnum;
 import com.wei.fly.interfaces.request.PageRequest;
 import lombok.Data;
@@ -20,4 +21,9 @@ public class ListCardRequest extends PageRequest {
 
     /** 卡类型(1:周卡，2:月卡，3:季度卡，4:年卡) */
     private CardTypeEnum cardType;
+
+    private CardStatusEnum cardStatus;
+
+    /** 是否激活 */
+    private Boolean active;
 }

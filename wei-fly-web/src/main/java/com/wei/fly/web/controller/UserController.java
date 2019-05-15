@@ -8,6 +8,7 @@ import com.wei.fly.interfaces.request.user.ListUserRequest;
 import com.wei.fly.interfaces.request.user.UserLoginRequest;
 import com.wei.fly.interfaces.request.user.UserProfile;
 import com.wei.fly.interfaces.request.user.UserRegistryRequest;
+import com.wei.fly.interfaces.request.user.UserRequest;
 import com.wei.fly.interfaces.response.Page;
 import com.wei.fly.interfaces.response.Result;
 import com.wei.fly.interfaces.response.user.UserResponse;
@@ -133,5 +134,18 @@ public class UserController implements UserFacade {
 
         final UserSessionResponse sessionUser = (UserSessionResponse) servletRequest.getSession().getAttribute("user");
         return userService.listUser(request, sessionUser);
+    }
+
+    @Override
+    public Result editUser(@RequestBody UserRequest request, HttpServletRequest servletRequest) {
+        final UserSessionResponse user = (UserSessionResponse) servletRequest.getSession().getAttribute("user");
+        request.setUserId(user.getUserId());
+        return userService.editUser(request);
+    }
+
+    @Override
+    public Result delData(HttpServletRequest servletRequest) {
+        final UserSessionResponse user = (UserSessionResponse) servletRequest.getSession().getAttribute("user");
+        return userService.delData(user.getUserId());
     }
 }

@@ -4,6 +4,7 @@ import com.wei.fly.interfaces.request.card.BindCardRequest;
 import com.wei.fly.interfaces.request.card.ListCardRequest;
 import com.wei.fly.interfaces.request.card.ModifyCardRequest;
 import com.wei.fly.interfaces.request.card.CreateCardRequest;
+import com.wei.fly.interfaces.request.card.RechargeRequest;
 import com.wei.fly.interfaces.request.card.UnbindCardRequest;
 import com.wei.fly.interfaces.response.Page;
 import com.wei.fly.interfaces.response.Result;
@@ -33,6 +34,12 @@ public interface CardFacade {
     Result getCard(HttpServletRequest servletRequest);
 
     @PostMapping("unbindCard")
-    Result unbindCard(UnbindCardRequest request);
+    Result unbindCard(UnbindCardRequest request, HttpServletRequest servletRequest);
+
+    @PostMapping("activeCard")
+    Result activeCard(UnbindCardRequest request);
+
+    @PostMapping("recharge")
+    Result recharge(RechargeRequest request);
 
 }

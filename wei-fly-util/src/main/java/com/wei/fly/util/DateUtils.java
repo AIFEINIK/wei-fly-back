@@ -327,6 +327,17 @@ public class DateUtils {
         return Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
+    public static LocalDateTime getUseDateTime(LocalTime useTime) {
+        LocalDateTime dateTime = LocalDateTime.of(LocalDate.now(), useTime);
+        LocalTime nowTime = LocalTime.now();
+        if (nowTime.isAfter(orderMinTime) && nowTime.isBefore(orderMaxTime)) {
+            //预约到第二天
+            dateTime = LocalDateTime.of(LocalDate.now().plusDays(1), useTime);
+
+        }
+        return dateTime;
+    }
+
     /**
      * 是否在禁止预约时间范围内
      * @return

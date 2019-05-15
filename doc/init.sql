@@ -39,6 +39,7 @@ CREATE TABLE f_card(
   card_type TINYINT(10) NOT NULL COMMENT '卡类型(1:周卡，2:月卡，3:季度卡，4:年卡)',
   can_use_num INT NOT NULL COMMENT '剩余可使用次数',
   active BIT(1) NOT NULL DEFAULT b'0' COMMENT '卡是否激活',
+  card_status TINYINT(5) NOT NULL COMMENT '卡状态（0：正常，1：已删除）',
   PRIMARY KEY(`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='会员卡表';
 

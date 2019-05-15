@@ -1,5 +1,6 @@
 package com.wei.fly.interfaces.request.user;
 
+import com.wei.fly.interfaces.enums.RoleTypeEnum;
 import com.wei.fly.interfaces.request.PageRequest;
 import lombok.Data;
 
@@ -15,4 +16,5 @@ public class ListUserRequest extends PageRequest {
     private String userId;
     private String phone;
     private String userName;
+    private RoleTypeEnum roleType;
 }

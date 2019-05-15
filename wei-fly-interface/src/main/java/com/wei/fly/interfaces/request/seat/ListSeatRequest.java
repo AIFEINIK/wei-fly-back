@@ -16,4 +16,5 @@ public class ListSeatRequest extends PageRequest {
 
     private SeatTypeEnum seatType;
     private SeatStatusEnum locked;
+    private String seatNum;
 }

@@ -10,7 +10,6 @@ import com.wei.fly.dao.entity.Order;
 import com.wei.fly.dao.entity.Record;
 import com.wei.fly.dao.entity.Seat;
 import com.wei.fly.dao.entity.User;
-import com.wei.fly.dao.entity.UserCard;
 import com.wei.fly.domain.OrderDomain;
 import com.wei.fly.domain.UniqueDomain;
 import com.wei.fly.interfaces.enums.BizTypeEnum;
@@ -35,10 +34,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -130,6 +127,11 @@ public class OrderMgrServiceImpl implements OrderMgrService {
                     ReturnStatusEnum.FORBID_ORDER_TIME.getName());
         }
 
+        if (DateUtils.getUseDateTime(LocalTime.parse(request.getUseTime())).isBefore(LocalDateTime.now())) {
+            return new Result(ReturnStatusEnum.INVALID_USE_TIME.getValue(),
+                    ReturnStatusEnum.INVALID_USE_TIME.getName());
+        }
+
         //锁定座位
         Seat updateSeat = new Seat();
         updateSeat.setLocked(SeatStatusEnum.YES.getIndex());
@@ -157,6 +159,7 @@ public class OrderMgrServiceImpl implements OrderMgrService {
         updateCard.setCanUseNum(card.getCanUseNum() - consumeNum);
         updateCard.setUpdateTime(new Date());
         updateCard.setUserId(card.getUserId());
+        updateCard.setCardCode(card.getCardCode());
         cardMapper.update(updateCard);
 
         //创建预约订单

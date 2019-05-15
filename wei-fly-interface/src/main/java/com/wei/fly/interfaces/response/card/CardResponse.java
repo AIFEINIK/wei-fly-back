@@ -1,5 +1,6 @@
 package com.wei.fly.interfaces.response.card;
 
+import com.wei.fly.interfaces.enums.CardStatusEnum;
 import com.wei.fly.interfaces.enums.CardTypeEnum;
 import lombok.Data;
 
@@ -36,4 +37,6 @@ public class CardResponse implements Serializable {
 
     /** 是否激活 */
     private Boolean active;
+
+    private CardStatusEnum cardStatus;
 }

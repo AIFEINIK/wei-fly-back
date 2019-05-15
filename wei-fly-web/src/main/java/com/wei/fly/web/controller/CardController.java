@@ -3,6 +3,7 @@ package com.wei.fly.web.controller;
 import com.wei.fly.interfaces.CardFacade;
 import com.wei.fly.interfaces.request.card.BindCardRequest;
 import com.wei.fly.interfaces.request.card.ListCardRequest;
+import com.wei.fly.interfaces.request.card.RechargeRequest;
 import com.wei.fly.interfaces.request.card.UnbindCardRequest;
 import com.wei.fly.interfaces.response.Page;
 import com.wei.fly.interfaces.response.Result;
@@ -57,7 +58,19 @@ public class CardController implements CardFacade {
     }
 
     @Override
-    public Result unbindCard(@RequestBody UnbindCardRequest request) {
+    public Result unbindCard(@RequestBody UnbindCardRequest request, HttpServletRequest servletRequest) {
+        final UserSessionResponse user = (UserSessionResponse) servletRequest.getSession().getAttribute("user");
+        request.setUserId(user.getUserId());
         return cardService.unbindCard(request);
+    }
+
+    @Override
+    public Result activeCard(@RequestBody UnbindCardRequest request) {
+        return cardService.activeCard(request);
+    }
+
+    @Override
+    public Result recharge(@RequestBody RechargeRequest request) {
+        return cardService.recharge(request);
     }
 }

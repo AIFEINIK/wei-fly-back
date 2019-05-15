@@ -1,14 +1,18 @@
 package com.wei.fly.service.impl;
 
 import com.wei.fly.dao.CardMapper;
+import com.wei.fly.dao.UserMapper;
 import com.wei.fly.dao.entity.Card;
+import com.wei.fly.dao.entity.User;
 import com.wei.fly.domain.UniqueDomain;
 import com.wei.fly.interfaces.enums.BizTypeEnum;
+import com.wei.fly.interfaces.enums.CardStatusEnum;
 import com.wei.fly.interfaces.enums.CardTypeEnum;
 import com.wei.fly.interfaces.enums.ReturnStatusEnum;
 import com.wei.fly.interfaces.enums.RoleTypeEnum;
 import com.wei.fly.interfaces.request.card.BindCardRequest;
 import com.wei.fly.interfaces.request.card.ListCardRequest;
+import com.wei.fly.interfaces.request.card.RechargeRequest;
 import com.wei.fly.interfaces.request.card.UnbindCardRequest;
 import com.wei.fly.interfaces.response.Page;
 import com.wei.fly.interfaces.response.Result;
@@ -21,6 +25,7 @@ import com.wei.fly.util.PageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,6 +47,9 @@ public class CardServiceImpl implements CardService {
     @Autowired
     private UniqueDomain uniqueDomain;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
     public Result<Page<CardResponse>> listCard(ListCardRequest request, UserSessionResponse sessionUser) {
         if (RoleTypeEnum.ADMIN != sessionUser.getRoleType()) {
@@ -59,6 +67,7 @@ public class CardServiceImpl implements CardService {
         for (Card card : cards) {
             CardResponse res = BeanUtils.transform(CardResponse.class, card, true);
             res.setCardType(CardTypeEnum.getType(card.getCardType()));
+            res.setCardStatus(CardStatusEnum.getType(card.getCardStatus()));
             orderResponses.add(res);
         }
 
@@ -66,6 +75,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Result createCard(BindCardRequest request) {
         final Card card = BeanUtils.transform(Card.class, request);
         final Card tmpCard = cardMapper.selectByUserId(request.getUserId());
@@ -79,9 +89,15 @@ public class CardServiceImpl implements CardService {
         card.setUpdateTime(new Date());
         card.setActive(false);
         card.setCanUseNum(0);
+        card.setCardStatus(CardStatusEnum.NORMAL.getIndex());
         card.setCardCode(uniqueDomain.getUniqueCode(CommonConstant.CARD_CODE_PREFIX,
                 BizTypeEnum.CARD));
         cardMapper.insert(card);
+
+        User user = new User();
+        user.setUserId(request.getUserId());
+        user.setRoleType(RoleTypeEnum.MEMBER.getIndex());
+        userMapper.update(user);
         return new Result();
     }
 
@@ -94,12 +110,46 @@ public class CardServiceImpl implements CardService {
         }
         final CardResponse res = BeanUtils.transform(CardResponse.class, card, true);
         res.setCardType(CardTypeEnum.getType(card.getCardType()));
+        res.setCardStatus(CardStatusEnum.getType(card.getCardStatus()));
         return new Result(res);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Result unbindCard(UnbindCardRequest request) {
-        cardMapper.deleteByCardCode(request.getCardCode());
+        final Card card = cardMapper.selectByCardCode(request.getCardCode());
+        if (card.getActive()) {
+            //已经激活则逻辑删除
+            Card updateCard = new Card();
+            updateCard.setCardCode(request.getCardCode());
+            updateCard.setCardStatus(CardStatusEnum.HAS_DEL.getIndex());
+            cardMapper.update(updateCard);
+
+        } else {
+            //物理删除
+            cardMapper.deleteByCardCode(request.getCardCode());
+
+            User user = new User();
+            user.setUserId(request.getUserId());
+            user.setRoleType(RoleTypeEnum.CUSTOMER.getIndex());
+            userMapper.update(user);
+        }
+        return new Result();
+    }
+
+    @Override
+    public Result activeCard(UnbindCardRequest request) {
+        final Card card = BeanUtils.transform(Card.class, request);
+        card.setActive(true);
+        cardMapper.update(card);
+        return new Result();
+    }
+
+    @Override
+    public Result recharge(RechargeRequest request) {
+        Card card = cardMapper.selectByCardCode(request.getCardCode());
+        card.setCanUseNum(card.getCanUseNum() + request.getUseTime());
+        cardMapper.update(card);
         return new Result();
     }
 }

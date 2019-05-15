@@ -3,6 +3,7 @@ package com.wei.fly.interfaces;
 import com.wei.fly.interfaces.request.user.CodeRequest;
 import com.wei.fly.interfaces.request.user.ListUserRequest;
 import com.wei.fly.interfaces.request.user.UserLoginRequest;
+import com.wei.fly.interfaces.request.user.UserRequest;
 import com.wei.fly.interfaces.response.Page;
 import com.wei.fly.interfaces.response.Result;
 import com.wei.fly.interfaces.response.user.UserResponse;
@@ -38,4 +39,10 @@ public interface UserFacade {
     @GetMapping("listUser")
     Result<Page<UserResponse>> listUser(ListUserRequest request,
                                         HttpServletRequest servletRequest);
+
+    @PostMapping("editUser")
+    Result editUser(UserRequest request, HttpServletRequest servletRequest);
+
+    @PostMapping("delData")
+    Result delData(HttpServletRequest servletRequest);
 }

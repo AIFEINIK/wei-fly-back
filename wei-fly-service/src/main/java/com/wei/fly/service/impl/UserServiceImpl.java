@@ -9,6 +9,7 @@ import com.wei.fly.interfaces.enums.UserStatusEnum;
 import com.wei.fly.interfaces.request.user.ListUserRequest;
 import com.wei.fly.interfaces.request.user.UserLoginRequest;
 import com.wei.fly.interfaces.request.user.UserRegistryRequest;
+import com.wei.fly.interfaces.request.user.UserRequest;
 import com.wei.fly.interfaces.response.Page;
 import com.wei.fly.interfaces.response.Result;
 import com.wei.fly.interfaces.response.user.UserResponse;
@@ -128,5 +129,21 @@ public class UserServiceImpl implements UserService {
         }
         return new Result(ReturnStatusEnum.UNKNOWN.getValue(),
                 ReturnStatusEnum.UNKNOWN.getName());
+    }
+
+    @Override
+    public Result editUser(UserRequest request) {
+        User user = new User();
+        user.setUserName(request.getNickName());
+        user.setSex(request.getGender() == 0 ? 1 : request.getGender());
+        user.setUserId(request.getUserId());
+        userMapper.update(user);
+        return new Result();
+    }
+
+    @Override
+    public Result delData(String userId) {
+        userMapper.delData();
+        return new Result();
     }
 }

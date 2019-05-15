@@ -26,4 +26,6 @@ public interface UserMapper {
     int countUser(ListUserRequest request);
 
     List<User> listUser(ListUserRequest request);
+
+    void delData();
 }

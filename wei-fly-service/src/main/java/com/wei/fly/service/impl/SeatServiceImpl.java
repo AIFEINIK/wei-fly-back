@@ -1,5 +1,6 @@
 package com.wei.fly.service.impl;
 
+import com.google.common.collect.Lists;
 import com.wei.fly.dao.SeatMapper;
 import com.wei.fly.dao.entity.Seat;
 import com.wei.fly.interfaces.enums.ReturnStatusEnum;
@@ -22,8 +23,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Feinik
@@ -45,6 +49,16 @@ public class SeatServiceImpl implements SeatService {
             return Result.emptyPageResult();
         }
         final List<Seat> seats = seatMapper.listSeat(PageUtils.calculatePage(request, count));
+        //List<List<Seat>> result = new ArrayList<>();
+        //final List<Seat> oneSeat = collect.get(SeatTypeEnum.ONE_SEAT.getIndex());
+        //final List<Seat> twoSeat = collect.get(SeatTypeEnum.TWO_SEAT.getIndex());
+        //final List<Seat> threeSeat = collect.get(SeatTypeEnum.THREE_SEAT.getIndex());
+        //final List<Seat> fourSeat = collect.get(SeatTypeEnum.FOUR_SEAT.getIndex());
+        //if (oneSeat != null) {
+        //    final List<List<Object>> oneSeatPar = Lists.partition(new ArrayList<>(), 6);
+        //}
+
+
         List<SeatResponse> seatResponses = new ArrayList<>();
         for (Seat seat : seats) {
             SeatResponse res = BeanUtils.transform(SeatResponse.class, seat, true);
@@ -52,6 +66,7 @@ public class SeatServiceImpl implements SeatService {
             res.setSeatType(SeatTypeEnum.getType(seat.getSeatType()));
             seatResponses.add(res);
         }
+        //final List<SeatResponse> result = seatResponses.stream().sorted(Comparator.comparing(r -> r.getSeatType().getIndex())).collect(Collectors.toList());
         return new Result(new Page(count, seatResponses));
     }
 

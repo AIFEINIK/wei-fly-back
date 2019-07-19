@@ -10,7 +10,8 @@ public enum SeatTypeEnum {
 
     ONE_SEAT(1, "单座"),
     TWO_SEAT(2, "双座"),
-    THREE_SEAT(3, "三座");
+    THREE_SEAT(3, "三座"),
+    FOUR_SEAT(4, "四座");
 
     private int index;
     private String value;
